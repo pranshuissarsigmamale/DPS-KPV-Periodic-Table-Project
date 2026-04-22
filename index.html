@@ -3,9 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Interactive Periodic Table</title>
-
-<link rel="stylesheet" href="./style.css">
+<title>Periodic Table Ultimate</title>
+<link rel="stylesheet" href="style.css">
 </head>
 
 <body>
@@ -13,8 +12,8 @@
 <h1>Interactive Periodic Table</h1>
 
 <div class="controls">
-  <button id="themeToggle">🌙 Toggle Theme</button>
-  <input type="text" id="search" placeholder="Search element...">
+  <button id="compareBtn">⚖️ Compare</button>
+  <input id="search" placeholder="Search element...">
 </div>
 
 <div id="table"></div>
@@ -28,6 +27,34 @@
   </div>
 </div>
 
-<script src="./script.js" defer></script>
+<!-- COMPARE -->
+<div id="comparePanel" class="compare-panel">
+  <div class="compare-box">
+    <button id="closeCompare">✖</button>
+
+    <h2>Compare Elements</h2>
+
+    <select id="elem1"></select>
+    <select id="elem2"></select>
+
+    <button onclick="compareElements()">Compare</button>
+
+    <div id="compareResult"></div>
+  </div>
+</div>
+
+<!-- MAP -->
+<div id="mapPanel" class="map-panel">
+  <div class="map-box">
+    <button id="closeMap">✖</button>
+    <h2 id="mapTitle"></h2>
+    <div id="mapContent"></div>
+  </div>
+</div>
+
+<!-- HOVER -->
+<div id="hoverCard" class="hover-card"></div>
+
+<script src="script.js" defer></script>
 </body>
 </html>
