@@ -3,15 +3,20 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Periodic Table Ultimate</title>
-<link rel="stylesheet" href="style.css">
+<title>Interactive Periodic Table</title>
+
+<!-- IMPORTANT: relative paths for GitHub -->
+<link rel="stylesheet" href="./style.css">
 </head>
+
 <body>
 
 <h1>Interactive Periodic Table</h1>
 
-<button id="themeToggle">🌙 Toggle Theme</button>
-<input type="text" id="search" placeholder="Search element...">
+<div class="controls">
+  <button id="themeToggle">🌙 Toggle Theme</button>
+  <input type="text" id="search" placeholder="Search element...">
+</div>
 
 <div id="legend">
   <span class="box alkali">Alkali</span>
@@ -27,6 +32,7 @@
 
 <div id="table"></div>
 
+<!-- MODAL -->
 <div id="modal" class="modal">
   <div class="modal-content">
     <span id="close">&times;</span>
@@ -35,6 +41,6 @@
   </div>
 </div>
 
-<script src="script.js" defer></script>
+<script src="./script.js" defer></script>
 </body>
 </html>
