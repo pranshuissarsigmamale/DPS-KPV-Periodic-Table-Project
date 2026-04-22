@@ -2,34 +2,39 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Interactive Periodic Table</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Periodic Table Ultimate</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <h1>Interactive Periodic Table</h1>
 
+<button id="themeToggle">🌙 Toggle Theme</button>
+<input type="text" id="search" placeholder="Search element...">
+
 <div id="legend">
-  <span class="alkali">Alkali</span>
-  <span class="alkaline">Alkaline</span>
-  <span class="transition">Transition</span>
-  <span class="metalloid">Metalloid</span>
-  <span class="nonmetal">Non-metal</span>
-  <span class="halogen">Halogen</span>
-  <span class="noble">Noble Gas</span>
+  <span class="box alkali">Alkali</span>
+  <span class="box alkaline">Alkaline</span>
+  <span class="box transition">Transition</span>
+  <span class="box metalloid">Metalloid</span>
+  <span class="box nonmetal">Non-metal</span>
+  <span class="box halogen">Halogen</span>
+  <span class="box noble">Noble Gas</span>
+  <span class="box lanthanoid">Lanthanoid</span>
+  <span class="box actinoid">Actinoid</span>
 </div>
 
 <div id="table"></div>
 
-<!-- Modal -->
 <div id="modal" class="modal">
   <div class="modal-content">
-    <span id="close-btn">&times;</span>
-    <h2 id="modal-title"></h2>
-    <div id="modal-body"></div>
+    <span id="close">&times;</span>
+    <h2 id="title"></h2>
+    <div id="content"></div>
   </div>
 </div>
 
-<script src="script.js"></script>
+<script src="script.js" defer></script>
 </body>
 </html>
