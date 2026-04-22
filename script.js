@@ -1,116 +1,147 @@
-const table = document.getElementById("table");
-
-/* CATEGORY MAP */
-const categoryMap = {
-H:"nonmetal",He:"noble",Li:"alkali",Be:"alkaline",
-B:"metalloid",C:"nonmetal",N:"nonmetal",O:"nonmetal",
-F:"halogen",Ne:"noble"
-};
-
-/* LOAD DATA */
-let elementDetails = {};
-
-fetch("https://raw.githubusercontent.com/Bowserinator/Periodic-Table-JSON/master/PeriodicTableJSON.json")
-.then(res=>res.json())
-.then(data=>{
-    data.elements.forEach(el=>{
-        elementDetails[el.symbol]={
-            name:el.name,
-            atomicNumber:el.number,
-            mass:el.atomic_mass,
-            category:el.category,
-            config:el.electron_configuration,
-            found:el.source||"Natural sources",
-            uses:el.summary||"Various uses",
-            type:el.category.includes("synthetic")?"Man-made":"Natural",
-            facts:generateFacts(el)
-        };
-
-        createElement(el);
-    });
-});
-
-/* CREATE ELEMENT */
-function createElement(el){
-    const div=document.createElement("div");
-    div.className="element "+(categoryMap[el.symbol]||"");
-    div.style.gridColumn=el.xpos;
-    div.style.gridRow=el.ypos;
-
-    div.innerHTML=`
-        <div class="number">${el.number}</div>
-        <div class="symbol">${el.symbol}</div>
-    `;
-
-    div.onclick=()=>openModal(el.symbol);
-
-    table.appendChild(div);
+:root {
+    --bg:#0f172a;
+    --text:#fff;
+    --card:#1e293b;
 }
+
+body.light {
+    --bg:#f1f5f9;
+    --text:#000;
+    --card:#fff;
+}
+
+body {
+    background:var(--bg);
+    color:var(--text);
+    text-align:center;
+    font-family:Arial;
+}
+
+/* CONTROLS */
+#search, #themeToggle {
+    padding:10px;
+    margin:10px;
+    border-radius:8px;
+    border:none;
+}
+
+/* LEGEND */
+.box {
+    padding:6px 10px;
+    margin:3px;
+    border-radius:5px;
+    display:inline-block;
+    font-size:12px;
+}
+
+/* TABLE */
+#table {
+    display:grid;
+    grid-template-columns:repeat(18, 50px);
+    gap:5px;
+    justify-content:center;
+}
+
+.element {
+    padding:6px;
+    border-radius:5px;
+    cursor:pointer;
+    background:var(--card);
+    font-size:12px;
+    transition:0.2s;
+    touch-action: manipulation;
+}
+
+.element:hover {
+    transform:scale(1.08);
+    z-index:2;
+}
+
+/* COLORS */
+.element.alkali,.box.alkali{background:#ef4444;}
+.element.alkaline,.box.alkaline{background:#f97316;}
+.element.transition,.box.transition{background:#eab308;}
+.element.metalloid,.box.metalloid{background:#22c55e;}
+.element.nonmetal,.box.nonmetal{background:#06b6d4;}
+.element.halogen,.box.halogen{background:#3b82f6;}
+.element.noble,.box.noble{background:#8b5cf6;}
+.element.lanthanoid,.box.lanthanoid{background:#ec4899;}
+.element.actinoid,.box.actinoid{background:#a855f7;}
 
 /* MODAL */
-const modal=document.getElementById("modal");
-const title=document.getElementById("modal-title");
-const body=document.getElementById("modal-body");
-
-document.getElementById("close-btn").onclick=closeModal;
-
-function openModal(symbol){
-    const data=elementDetails[symbol];
-
-    title.innerText=data.name;
-
-    body.innerHTML=`
-    <b>Atomic Number:</b> ${data.atomicNumber}<br>
-    <b>Atomic Mass:</b> ${data.mass}<br>
-    <b>Category:</b> ${data.category}<br><br>
-
-    <b>⚛️ Electron Configuration:</b><br>
-    `;
-
-    body.appendChild(animateConfig(data.config));
-
-    body.innerHTML+=`
-    <br><b>🌍 Found:</b> ${data.found}<br>
-    <b>⚙️ Uses:</b> ${data.uses}<br>
-    <b>🤖 Type:</b> ${data.type}<br><br>
-
-    <b>💡 Facts:</b>
-    <ul>${data.facts.map(f=>`<li>${f}</li>`).join("")}</ul>
-    `;
-
-    modal.style.display="block";
-    setTimeout(()=>modal.classList.add("show"),10);
+.modal {
+    position:fixed;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.7);
+    opacity:0;
+    pointer-events:none;
+    transition:0.3s;
 }
 
-function closeModal(){
-    modal.classList.remove("show");
-    setTimeout(()=>modal.style.display="none",300);
+.modal.show {
+    opacity:1;
+    pointer-events:auto;
 }
 
-window.onclick=e=>{
-    if(e.target==modal) closeModal();
-};
-
-/* ANIMATE CONFIG */
-function animateConfig(config){
-    const container=document.createElement("div");
-    config.split(" ").forEach((orb,i)=>{
-        const span=document.createElement("span");
-        span.className="orbital";
-        span.innerText=orb;
-        span.style.animationDelay=(i*0.2)+"s";
-        container.appendChild(span);
-    });
-    return container;
+.modal-content {
+    background:var(--card);
+    margin:10% auto;
+    padding:20px;
+    width:320px;
+    border-radius:10px;
+    max-height:80vh;
+    overflow:auto;
 }
 
-/* AUTO FACTS */
-function generateFacts(el){
-    return [
-        `${el.name} has atomic number ${el.number}.`,
-        `Category: ${el.category}.`,
-        `Electron config: ${el.electron_configuration}.`,
-        el.summary?.slice(0,100)+"...",
-        el.discovered_by ? `Discovered by ${el.discovered_by}.` : "Discovery unknown."
-    ];
+body.modal-open {
+    overflow:hidden;
 }
+
+/* ORBITAL */
+.orbital-box {
+    display:inline-block;
+    width:28px;
+    height:28px;
+    border:1px solid white;
+    margin:2px;
+    text-align:center;
+}
+
+/* SHELL MODEL */
+.atom {
+    position:relative;
+    width:240px;
+    height:240px;
+    margin:20px auto;
+}
+
+.orbit {
+    position:absolute;
+    border:1px solid white;
+    border-radius:50%;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+}
+
+.electron-wrapper {
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform-origin:center;
+    animation:spin linear infinite;
+}
+
+.electron {
+    width:6px;
+    height:6px;
+    background:#38bdf8;
+    border-radius:50%;
+    position:absolute;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+    }
