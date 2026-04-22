@@ -5,17 +5,14 @@ const modal = document.getElementById("modal");
 const title = document.getElementById("title");
 const content = document.getElementById("content");
 
-const hoverCard = document.getElementById("hoverCard");
-
-const mapPanel = document.getElementById("mapPanel");
-const mapTitle = document.getElementById("mapTitle");
-const mapContent = document.getElementById("mapContent");
-
 const search = document.getElementById("search");
 
-let elements = {};
+const quizPanel = document.getElementById("quizPanel");
 
-/* ---------------- LOAD ---------------- */
+let elements = {};
+let quizSet = [];
+
+/* ---------------- LOAD TABLE ---------------- */
 fetch("https://raw.githubusercontent.com/Bowserinator/Periodic-Table-JSON/master/PeriodicTableJSON.json")
 .then(r => r.json())
 .then(data => {
@@ -30,25 +27,15 @@ const div = document.createElement("div");
 div.className = "element";
 
 div.innerHTML = `${el.number}<br>${el.symbol}`;
-div.dataset.name = el.name;
-div.dataset.symbol = el.symbol;
 
 div.style.gridColumn = el.xpos;
 div.style.gridRow = el.ypos;
 
 div.onclick = () => openModal(el.symbol);
 
-div.onmouseenter = e => showHover(el, e);
-div.onmousemove = e => moveHover(e);
-div.onmouseleave = hideHover;
-
 table.appendChild(div);
 });
 
-})
-.catch(err => {
-console.error("Load failed", err);
-table.innerHTML = "<p>Failed to load elements</p>";
 });
 
 /* ---------------- MODAL ---------------- */
@@ -63,90 +50,72 @@ title.textContent = `${el.name} (${el.symbol})`;
 content.innerHTML = `
 <p>Atomic No: ${el.number}</p>
 <p>Mass: ${el.atomic_mass}</p>
-
-<button onclick="showMap('${sym}')">🌍 Map</button>
+<p>Category: ${el.category}</p>
 `;
 }
 
 document.getElementById("close").onclick =
 ()=>modal.classList.remove("show");
 
-/* ---------------- HOVER (STABLE) ---------------- */
-function showHover(el,e){
-if(!el) return;
-
-hoverCard.classList.add("show");
-hoverCard.innerHTML = `
-<b>${el.name}</b><br>
-#${el.number}
-`;
-
-moveHover(e);
-}
-
-function moveHover(e){
-hoverCard.style.left = (e.clientX + 10) + "px";
-hoverCard.style.top = (e.clientY + 10) + "px";
-}
-
-function hideHover(){
-hoverCard.classList.remove("show");
-}
-
-/* safety */
-window.addEventListener("mouseout", hideHover);
-
 /* ---------------- SEARCH ---------------- */
 search.oninput = e => {
 const v = e.target.value.toLowerCase();
 
 document.querySelectorAll(".element").forEach(el => {
-const n = el.dataset.name || "";
-const s = el.dataset.symbol || "";
-
-const match = n.toLowerCase().includes(v) || s.toLowerCase().includes(v);
-
-el.style.opacity = (!v || match) ? "1" : "0.15";
+el.style.opacity =
+el.innerText.toLowerCase().includes(v) ? "1" : "0.2";
 });
 };
 
-/* ---------------- MAP ---------------- */
-window.showMap = function(sym){
+/* ---------------- QUIZ ---------------- */
+document.getElementById("quizBtn").onclick = () => {
+quizPanel.classList.add("show");
+loadQuiz();
+};
 
-const el = elements[sym];
-if(!el) return;
+document.getElementById("closeQuiz").onclick = () => {
+quizPanel.classList.remove("show");
+};
 
-mapPanel.classList.add("show");
+const questions = [
+{ q:"Symbol of Hydrogen?", options:["H","He"], answer:"H" },
+{ q:"Atomic number of Helium?", options:["1","2"], answer:"2" },
+{ q:"Symbol of Oxygen?", options:["O","Ox"], answer:"O" }
+];
 
-mapTitle.textContent = "🌍 Element Locations";
+function loadQuiz(){
+quizSet = questions.sort(()=>0.5-Math.random()).slice(0,2);
 
-mapContent.innerHTML = `
-<button onclick="filterCountry('India')">India</button>
-<button onclick="filterCountry('USA')">USA</button>
-<button onclick="filterCountry('Global')">Global</button>
+const quiz = document.getElementById("quiz");
+quiz.innerHTML = "";
+
+quizSet.forEach((q,i)=>{
+
+let div = document.createElement("div");
+div.innerHTML = `<p>${q.q}</p>`;
+
+q.options.forEach(o=>{
+div.innerHTML += `
+<label>
+<input type="radio" name="q${i}" value="${o}">
+${o}
+</label><br>
 `;
+});
+
+quiz.appendChild(div);
+});
+}
+
+window.checkAnswers = function(){
+let score = 0;
+
+quizSet.forEach((q,i)=>{
+const sel = document.querySelector(`input[name=q${i}]:checked`);
+if(sel && sel.value === q.answer) score++;
+});
+
+alert("Score: " + score + "/" + quizSet.length);
 };
-
-window.filterCountry = function(country){
-
-const map = {
-India: ["iron","aluminium","uranium"],
-USA: ["iron","copper","gold"],
-Global: ["oxygen","carbon","hydrogen"]
-};
-
-const list = Object.values(elements).filter(e =>
-(map[country] || []).some(k =>
-(e.name || "").toLowerCase().includes(k)
-));
-
-mapContent.innerHTML = `
-<h3>${country}</h3>
-${list.length ? list.map(e => e.name).join("<br>") : "No data"}
-`;
-};
-
-document.getElementById("closeMap").onclick =
-()=>mapPanel.classList.remove("show");
 
 });
