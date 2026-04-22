@@ -3,17 +3,19 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Periodic Table</title>
-<link rel="stylesheet" href="style.css">
+<title>Periodic Table Ultimate</title>
+
+<link rel="stylesheet" href="./style.css">
 </head>
 
 <body>
 
-<h1>Periodic Table</h1>
+<h1>Interactive Periodic Table</h1>
 
 <div class="controls">
-  <input id="search" placeholder="Search element...">
+  <button id="themeToggle">🌙 Toggle Theme</button>
   <button id="quizBtn">🧠 Quiz</button>
+  <input type="text" id="search" placeholder="Search element...">
 </div>
 
 <div id="table"></div>
@@ -27,17 +29,17 @@
   </div>
 </div>
 
-<!-- QUIZ -->
+<!-- QUIZ PANEL -->
 <div id="quizPanel" class="quiz-panel">
   <div class="quiz-box">
     <button id="closeQuiz">✖</button>
-    <h2>Quiz</h2>
+    <h2>🔬 Quiz</h2>
     <div id="quiz"></div>
     <button onclick="checkAnswers()">Submit</button>
-    <button onclick="loadQuiz()">Reset</button>
+    <button onclick="resetQuiz()">Reset</button>
   </div>
 </div>
 
-<script src="script.js" defer></script>
+<script src="./script.js"></script>
 </body>
 </html>
