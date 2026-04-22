@@ -1,126 +1,77 @@
-:root {
-  --bg:#0f172a;
-  --text:#fff;
-  --card:#1e293b;
-}
-
-body.light {
-  --bg:#f1f5f9;
-  --text:#000;
-  --card:#fff;
-}
-
 body {
-  background:var(--bg);
-  color:var(--text);
+  background:#0f172a;
+  color:white;
   font-family:Arial;
   text-align:center;
 }
 
-/* CONTROLS */
-.controls {
-  display:flex;
-  justify-content:center;
-  flex-wrap:wrap;
-}
-
-#search,#themeToggle {
-  padding:10px;
-  margin:10px;
-  border-radius:8px;
-  border:none;
-}
-
-/* LEGEND */
-.box {
-  padding:5px 10px;
-  margin:3px;
-  border-radius:5px;
-}
-
-/* TABLE */
 #table {
   display:grid;
-  grid-template-columns:repeat(18, minmax(40px,1fr));
-  gap:6px;
-  max-width:1000px;
-  margin:auto;
+  grid-template-columns:repeat(18,50px);
+  gap:5px;
+  justify-content:center;
 }
 
 .element {
+  background:#1e293b;
   padding:6px;
   border-radius:6px;
   cursor:pointer;
   font-size:12px;
-  color:#fff;
 }
 
-/* COLORS */
-.alkali{background:#ef4444;}
-.alkaline{background:#f97316;}
-.transition{background:#eab308;}
-.metalloid{background:#22c55e;}
-.nonmetal{background:#06b6d4;}
-.halogen{background:#3b82f6;}
-.noble{background:#8b5cf6;}
-.lanthanoid{background:#ec4899;}
-.actinoid{background:#a855f7;}
-
-/* MODAL */
-.modal {
+/* POPUPS */
+.modal,.compare-panel,.map-panel{
   position:fixed;
-  width:100%;
-  height:100%;
-  background:rgba(0,0,0,0.7);
+  inset:0;
+  background:rgba(0,0,0,0.8);
   opacity:0;
   pointer-events:none;
   transition:0.3s;
 }
 
-.modal.show {
+.modal.show,.compare-panel.show,.map-panel.show{
   opacity:1;
   pointer-events:auto;
 }
 
-.modal-content {
-  background:var(--card);
-  padding:20px;
+.modal-content,.compare-box,.map-box{
+  background:#1e293b;
   width:90%;
-  max-width:350px;
-  margin:10% auto;
+  max-width:600px;
+  margin:5% auto;
+  padding:20px;
   border-radius:10px;
 }
 
-/* ORBITAL */
-.orbital-box {
-  display:inline-block;
-  width:22px;
-  height:22px;
-  border:1px solid white;
-  margin:2px;
+/* HOVER */
+.hover-card{
+  position:fixed;
+  background:#1e293b;
+  padding:8px;
+  border-radius:8px;
+  font-size:12px;
+  opacity:0;
+  pointer-events:none;
 }
 
-/* SHELL */
-.atom {
-  position:relative;
-  width:200px;
-  height:200px;
-  margin:20px auto;
+.hover-card.show{opacity:1}
+
+/* BAR */
+.bar{
+  display:flex;
+  align-items:center;
+  gap:8px;
 }
 
-.orbit {
-  position:absolute;
-  border:1px solid white;
-  border-radius:50%;
-  top:50%;
-  left:50%;
-  transform:translate(-50%,-50%);
+.bar-track{
+  flex:1;
+  height:8px;
+  background:#0f172a;
+  border-radius:5px;
 }
 
-.electron {
-  position:absolute;
-  width:6px;
-  height:6px;
+.bar-fill{
+  height:100%;
   background:#38bdf8;
-  border-radius:50%;
 }
