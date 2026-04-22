@@ -3,16 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Periodic Table Ultimate</title>
+<title>Periodic Table</title>
 <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-<h1>Interactive Periodic Table</h1>
+<h1>Periodic Table</h1>
 
 <div class="controls">
   <input id="search" placeholder="Search element...">
+  <button id="quizBtn">🧠 Quiz</button>
 </div>
 
 <div id="table"></div>
@@ -26,15 +27,14 @@
   </div>
 </div>
 
-<!-- HOVER -->
-<div id="hoverCard" class="hover-card"></div>
-
-<!-- MAP -->
-<div id="mapPanel" class="map-panel">
-  <div class="map-box">
-    <button id="closeMap">✖</button>
-    <h2 id="mapTitle"></h2>
-    <div id="mapContent"></div>
+<!-- QUIZ -->
+<div id="quizPanel" class="quiz-panel">
+  <div class="quiz-box">
+    <button id="closeQuiz">✖</button>
+    <h2>Quiz</h2>
+    <div id="quiz"></div>
+    <button onclick="checkAnswers()">Submit</button>
+    <button onclick="loadQuiz()">Reset</button>
   </div>
 </div>
 
