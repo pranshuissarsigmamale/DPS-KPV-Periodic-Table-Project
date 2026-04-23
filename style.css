@@ -1,7 +1,8 @@
 body {
+  margin:0;
+  font-family:Arial;
   background:#0f172a;
   color:white;
-  font-family:Arial;
   text-align:center;
 }
 
@@ -11,73 +12,110 @@ body {
   grid-template-columns:repeat(18,50px);
   gap:5px;
   justify-content:center;
+  padding:20px;
 }
 
 .element {
   padding:8px;
   border-radius:6px;
   cursor:pointer;
-  color:white;
+  background:#3b82f6;
+  transition:0.2s;
 }
 
-/* COLORS */
-.alkali{background:#ef4444;}
-.alkaline{background:#f97316;}
-.transition{background:#eab308;}
-.metalloid{background:#22c55e;}
-.nonmetal{background:#06b6d4;}
-.halogen{background:#3b82f6;}
-.noble{background:#8b5cf6;}
-.lanthanoid{background:#ec4899;}
-.actinoid{background:#a855f7;}
+.element:hover {
+  transform:scale(1.1);
+}
+
+/* HOVER CARD */
+#hoverCard {
+  position:fixed;
+  background:#1e293b;
+  padding:10px;
+  border-radius:8px;
+  display:none;
+  font-size:12px;
+  pointer-events:none;
+  z-index:1000;
+}
 
 /* MODAL */
-.modal {
+#modal {
   position:fixed;
-  width:100%;
-  height:100%;
+  inset:0;
   background:rgba(0,0,0,0.7);
   display:none;
+  justify-content:center;
+  align-items:center;
 }
 
-.modal.show {
-  display:block;
+#modal.show {
+  display:flex;
 }
 
-.modal-content {
+.modal-box {
   background:#1e293b;
   padding:20px;
-  width:300px;
-  margin:10% auto;
-}
-
-/* QUIZ */
-.quiz-panel {
-  position:fixed;
-  width:100%;
-  height:100%;
-  background:rgba(0,0,0,0.8);
-  opacity:0;
-  pointer-events:none;
-  transition:0.3s;
-}
-
-.quiz-panel.show {
-  opacity:1;
-  pointer-events:auto;
-}
-
-.quiz-box {
-  background:#1e293b;
-  padding:20px;
+  border-radius:10px;
   width:90%;
   max-width:400px;
-  margin:5% auto;
-  border-radius:10px;
-  transform:scale(0.8);
-  transition:0.3s;
+  position:relative;
 }
 
-.quiz-panel.show .quiz-box {
-  transform:scale(1);
+#close {
+  position:absolute;
+  right:10px;
+  top:10px;
+  cursor:pointer;
+}
+
+/* ATOM */
+#atom {
+  width:200px;
+  height:200px;
+  margin:15px auto;
+  position:relative;
+}
+
+.nucleus {
+  width:30px;
+  height:30px;
+  background:yellow;
+  border-radius:50%;
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+}
+
+.orbit {
+  border:1px solid rgba(255,255,255,0.3);
+  border-radius:50%;
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  animation:spin linear infinite;
+}
+
+.electron {
+  width:6px;
+  height:6px;
+  background:#38bdf8;
+  border-radius:50%;
+  position:absolute;
+  top:-3px;
+  left:50%;
+}
+
+@keyframes spin {
+  from {transform:translate(-50%,-50%) rotate(0deg);}
+  to {transform:translate(-50%,-50%) rotate(360deg);}
+}
+
+/* USES */
+#uses {
+  margin-top:10px;
+  text-align:left;
+  font-size:13px;
 }
