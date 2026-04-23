@@ -1,155 +1,153 @@
 document.addEventListener("DOMContentLoaded", () => {
 
 const table = document.getElementById("table");
+const hover = document.getElementById("hoverCard");
+const search = document.getElementById("search");
+
 const modal = document.getElementById("modal");
 const title = document.getElementById("title");
 const content = document.getElementById("content");
-const search = document.getElementById("search");
+const atom = document.getElementById("atom");
+const usesBox = document.getElementById("uses");
 
-let elements = {};
+let elements = [];
 
-/* CATEGORY */
-function getCategory(cat){
-  if(!cat) return "";
-  cat = cat.toLowerCase();
+/* USES */
+const elementUses = {
+  Hydrogen:["Fuel","Rocket fuel"],
+  Oxygen:["Breathing","Medical"],
+  Carbon:["Fuel","Diamond"],
+  Iron:["Construction"],
+  Copper:["Wiring"],
+  Gold:["Jewelry"],
+  Silicon:["Chips"]
+};
 
-  if(cat.includes("lanthanoid")) return "lanthanoid";
-  if(cat.includes("actinoid")) return "actinoid";
-  if(cat.includes("alkaline")) return "alkaline";
-  if(cat.includes("alkali")) return "alkali";
-  if(cat.includes("transition")) return "transition";
-  if(cat.includes("metalloid")) return "metalloid";
-  if(cat.includes("nonmetal")) return "nonmetal";
-  if(cat.includes("halogen")) return "halogen";
-  if(cat.includes("noble")) return "noble";
-
-  return "";
-}
-
-/* LOAD */
+/* FETCH DATA */
 fetch("https://raw.githubusercontent.com/Bowserinator/Periodic-Table-JSON/master/PeriodicTableJSON.json")
 .then(r=>r.json())
 .then(data=>{
+  elements = data.elements;
+  render(elements);
+})
+.catch(()=>{
+  table.innerHTML = "⚠️ Failed to load data. Check internet.";
+});
 
-  data.elements.forEach(el=>{
+/* RENDER TABLE */
+function render(list){
+  table.innerHTML = "";
 
-    if(el.number > 118) return;
-
-    elements[el.symbol] = el;
+  list.forEach(el=>{
+    if(!el.xpos || !el.ypos) return;
 
     const div = document.createElement("div");
-    div.className = "element " + getCategory(el.category);
+    div.className = "element";
 
-    div.dataset.symbol = el.symbol;
-    div.dataset.name = el.name;
+    div.innerHTML = `${el.number}<br>${el.symbol}`;
+    div.style.gridColumn = el.xpos;
+    div.style.gridRow = el.ypos;
 
-    /* INDICATOR */
-    if(el.number === 57){
-      div.innerHTML = "57<br>*";
-    }
+    div.dataset.name = el.name.toLowerCase();
+    div.dataset.symbol = el.symbol.toLowerCase();
 
-    if(el.number === 89){
-      div.innerHTML = "89<br>**";
-    }
+    /* HOVER */
+    div.addEventListener("mousemove", e=>{
+      hover.style.display = "block";
 
-    /* POSITION */
-    if(el.category?.includes("lanthanoid")){
-      div.style.gridRow = 9;
-      div.style.gridColumn = el.number - 56;
-    }
-    else if(el.category?.includes("actinoid")){
-      div.style.gridRow = 10;
-      div.style.gridColumn = el.number - 88;
-    }
-    else{
-      div.style.gridColumn = el.xpos;
-      div.style.gridRow = el.ypos;
-      div.innerHTML = `${el.number}<br><b>${el.symbol}</b>`;
-    }
+      let x = e.pageX + 12;
+      let y = e.pageY + 12;
 
-    div.addEventListener("click", ()=>openModal(el.symbol));
+      x = Math.min(x, window.innerWidth - 180);
+      y = Math.min(y, window.innerHeight - 100);
+
+      hover.style.left = x + "px";
+      hover.style.top = y + "px";
+
+      hover.innerHTML = `
+        <b>${el.name}</b><br>
+        ${el.symbol} | ${el.number}
+      `;
+    });
+
+    div.addEventListener("mouseleave", ()=>{
+      hover.style.display = "none";
+    });
+
+    /* CLICK */
+    div.addEventListener("click", ()=>{
+      modal.classList.add("show");
+
+      title.innerText = `${el.name} (${el.symbol})`;
+
+      content.innerHTML = `
+        Atomic No: ${el.number}<br>
+        Mass: ${el.atomic_mass}<br>
+        Config: ${el.electron_configuration || "N/A"}
+      `;
+
+      renderAtom(el);
+
+      const uses = elementUses[el.name] || ["Various uses"];
+      usesBox.innerHTML =
+        "<b>Uses:</b><br>• " + uses.join("<br>• ");
+    });
 
     table.appendChild(div);
   });
-});
+}
 
-/* MODAL */
-function openModal(symbol){
-  const el = elements[symbol];
-  if(!el) return;
+/* ATOM */
+function renderAtom(el){
+  atom.innerHTML = `<div class="nucleus"></div>`;
 
-  modal.classList.add("show");
+  if(!el.shells) return;
 
-  title.innerText = el.name;
+  el.shells.forEach((c,i)=>{
+    const orbit = document.createElement("div");
+    orbit.className = "orbit";
 
-  content.innerHTML = `
-    Atomic No: ${el.number}<br>
-    Mass: ${el.atomic_mass}<br>
-    Category: ${el.category}<br>
-    Config: ${el.electron_configuration}
-  `;
+    const size = 50 + i*30;
+
+    orbit.style.width = size + "px";
+    orbit.style.height = size + "px";
+    orbit.style.animationDuration = (4 + i*2) + "s";
+
+    for(let j=0;j<c;j++){
+      const e = document.createElement("div");
+      e.className = "electron";
+
+      e.style.transform =
+        `rotate(${(360/c)*j}deg) translate(${size/2}px)`;
+
+      orbit.appendChild(e);
+    }
+
+    atom.appendChild(orbit);
+  });
 }
 
 /* CLOSE MODAL */
-document.getElementById("close").onclick = ()=>modal.classList.remove("show");
+document.getElementById("close").onclick = ()=>{
+  modal.classList.remove("show");
+};
 
-/* SEARCH */
-search.addEventListener("input", ()=>{
-  const v = search.value.toLowerCase();
-
-  document.querySelectorAll(".element").forEach(el=>{
-    el.style.opacity =
-      !v ||
-      el.dataset.name.toLowerCase().includes(v) ||
-      el.dataset.symbol.toLowerCase().includes(v)
-      ? "1":"0.2";
-  });
+modal.addEventListener("click", e=>{
+  if(e.target === modal){
+    modal.classList.remove("show");
+  }
 });
 
-/* QUIZ */
-const quizPanel = document.getElementById("quizPanel");
+/* SEARCH */
+search.addEventListener("input", e=>{
+  const v = e.target.value.toLowerCase();
 
-document.getElementById("quizBtn").onclick = ()=>{
-  quizPanel.classList.add("show");
-  loadQuiz();
-};
+  const filtered = elements.filter(el =>
+    el.name.toLowerCase().includes(v) ||
+    el.symbol.toLowerCase().includes(v)
+  );
 
-document.getElementById("closeQuiz").onclick = ()=>{
-  quizPanel.classList.remove("show");
-};
-
-/* QUIZ LOGIC */
-const allQuestions = [
-  { q:"Symbol of Hydrogen?", options:["H","He"], answer:"H" },
-  { q:"Atomic number of Helium?", options:["1","2"], answer:"2" }
-];
-
-let selected = [];
-
-function loadQuiz(){
-  selected = allQuestions.sort(()=>0.5-Math.random()).slice(0,2);
-  const quiz = document.getElementById("quiz");
-  quiz.innerHTML="";
-
-  selected.forEach((q,i)=>{
-    let div=document.createElement("div");
-    div.innerHTML = `<p>${q.q}</p>`;
-    q.options.forEach(o=>{
-      div.innerHTML += `<input type="radio" name="q${i}" value="${o}">${o}<br>`;
-    });
-    quiz.appendChild(div);
-  });
-}
-
-window.checkAnswers = function(){
-  let score=0;
-  selected.forEach((q,i)=>{
-    let sel=document.querySelector(`input[name=q${i}]:checked`);
-    if(sel && sel.value===q.answer) score++;
-  });
-  alert("Score: "+score);
-}
-
-window.resetQuiz = loadQuiz;
+  render(filtered);
+});
 
 });
