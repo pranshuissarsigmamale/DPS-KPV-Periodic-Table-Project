@@ -3,43 +3,34 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Periodic Table Ultimate</title>
+<title>Periodic Table App</title>
 
-<link rel="stylesheet" href="./style.css">
+<link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-<h1>Interactive Periodic Table</h1>
+<h1>⚛️ Periodic Table</h1>
 
-<div class="controls">
-  <button id="themeToggle">🌙 Toggle Theme</button>
-  <button id="quizBtn">🧠 Quiz</button>
-  <input type="text" id="search" placeholder="Search element...">
-</div>
+<input type="text" id="search" placeholder="Search element...">
 
 <div id="table"></div>
 
+<!-- HOVER CARD -->
+<div id="hoverCard"></div>
+
 <!-- MODAL -->
-<div id="modal" class="modal">
-  <div class="modal-content">
+<div id="modal">
+  <div class="modal-box">
     <span id="close">&times;</span>
     <h2 id="title"></h2>
     <div id="content"></div>
+    <div id="atom"></div>
+    <div id="uses"></div>
   </div>
 </div>
 
-<!-- QUIZ PANEL -->
-<div id="quizPanel" class="quiz-panel">
-  <div class="quiz-box">
-    <button id="closeQuiz">✖</button>
-    <h2>🔬 Quiz</h2>
-    <div id="quiz"></div>
-    <button onclick="checkAnswers()">Submit</button>
-    <button onclick="resetQuiz()">Reset</button>
-  </div>
-</div>
+<script src="script.js"></script>
 
-<script src="./script.js"></script>
 </body>
 </html>
